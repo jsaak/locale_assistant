@@ -8,19 +8,21 @@ if you want to keep things simple and do not need online services like [localeap
 
 Workflow
 --------------
+<pre>
   - install
   - setup
   - edit only your chosen language .yml file
   - run "locale_assistant en" from your rails root direcotry (no need for bundle exec)
-   this will sort your en.yml alphabetically (if 'en' is your primary language)
-   update or generate other language files (defined in LocaleAssistant::Languages)
-   Of course it can not translate, but will insert "TODO (text in other language)" keys in other files
+    this will sort your en.yml alphabetically (if 'en' is your primary language)
+    update or generate other language files (defined in LocaleAssistant::Languages)
+    Of course it can not translate, but will insert "TODO (text in other language)" keys in other files
   - commit
+</pre>
 
 Install
 --------------
 <pre>
-$ gem install loacle_assistant
+$ gem install locale_assistant
 </pre>
 or you can just copy that single file from the bin directory
 
