@@ -3,9 +3,9 @@
 require 'optparse'
 
 begin
-   require Dir.pwd+'/config/locale_assistant.conf.rb'
+   require Dir.pwd+'/config/l_assistant.conf.rb'
 rescue LoadError
-   puts 'Needs a config file located at CURRENT_DIR/config/locale_assistant.conf.rb'
+   puts 'Needs a config file located at CURRENT_DIR/config/l_assistant.conf.rb'
    puts 'something like this:'
    puts %Q|
 module LocaleAssistant
@@ -41,7 +41,8 @@ def load_file(fn)
          keystore.pop
          keystore.push(key)
       elsif curr_spaces < spaces
-         while curr_spaces <= spaces
+         keystore.pop
+         while curr_spaces < spaces
             spaces -= indentstore.pop
             keystore.pop
          end
@@ -53,6 +54,7 @@ def load_file(fn)
          hash[x] = val
          arr.push([x,val])
       end
+
    end
    f.close
 
@@ -175,7 +177,7 @@ options = parse_command_line
 if LocaleAssistant::Languages.include?(ARGV[0])
   puts "using " + ARGV[0] + " as source language"
   LocaleAssistant::Files.each do |file|
-    process_file(path,file,ARGV[0],options[:inspecting_mode],options[:destructive],options[:tempfile])
+    process_file(Dir.pwd+'/',file,ARGV[0],options[:inspecting_mode],options[:destructive],options[:tempfile])
   end
 else
   puts "Usage: #{__FILE__} [options] source_language"

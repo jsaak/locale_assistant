@@ -28,7 +28,7 @@ or you can just copy that single file from the bin directory
 
 Setup
 --------------
-edit <code>RAILSROOT/config/locale_assistant.conf.rb</code>
+edit <code>RAILSROOT/config/l_assistant.conf.rb</code>
 <pre>
 module LocaleAssistant
    Files = ['config/locales/#lang#.yml',
