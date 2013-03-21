@@ -17,6 +17,7 @@ module LocaleAssistant
    IgnoreList = []
 end
 |
+   exit
 end
 
 def load_file(fn)
@@ -27,38 +28,46 @@ def load_file(fn)
    indentstore = []
    spaces = -1
 
-   f = File.open(fn)
-   f.each_line do |line|
-      curr_spaces = (line.size - line.lstrip.size)
-      key,val = line.strip.split(/:/,2)
-      val = val.strip
+   begin
+      f = File.open(fn)
+      f.each_line do |line|
+         next if line.strip.size == 0       # remove empty lines
+         next if line.lstrip =~ /^#/        # remove full line comments
 
-      if curr_spaces > spaces
-         indentstore.push(curr_spaces-spaces)
-         spaces = curr_spaces
-         keystore.push(key)
-      elsif curr_spaces == spaces
-         keystore.pop
-         keystore.push(key)
-      elsif curr_spaces < spaces
-         keystore.pop
-         while curr_spaces < spaces
-            spaces -= indentstore.pop
+         curr_spaces = (line.size - line.lstrip.size)
+         key,val = line.strip.split(/:/,2)
+         val = val.strip
+
+         val = '' if val =~ /^#/            # remove comments from non leaf elements
+
+         if curr_spaces > spaces
+            indentstore.push(curr_spaces-spaces)
+            spaces = curr_spaces
+            keystore.push(key)
+         elsif curr_spaces == spaces
             keystore.pop
+            keystore.push(key)
+         elsif curr_spaces < spaces
+            keystore.pop
+            while curr_spaces < spaces
+               spaces -= indentstore.pop
+               keystore.pop
+            end
+            keystore.push(key)
          end
-         keystore.push(key)
-      end
 
-      unless val == ''
-         x = keystore.join('.')
-         hash[x] = val
-         arr.push([x,val])
+         unless val == ''
+            x = keystore.join('.')
+            hash[x] = val
+            arr.push([x,val])
+         end
       end
+      f.close
 
+      arr.sort!
+   rescue Errno::ENOENT
    end
-   f.close
 
-   arr.sort!
    return [arr,hash]
 end
 
@@ -85,9 +94,9 @@ def write_out(fn,array,hash,country_code)
       if indent+1 == x[counter..-1].size
         value2 = hash[country_code+key[2..-1]]
         if value2.nil?
-          f << ' "TODO ('+val.to_s+')"'
+          f << val.gsub(/^(['"]?)/,' \1TODO ')
         else
-          f << ' "' + value2.to_s + '"'
+          f << ' ' + value2.to_s
         end
       end
       f << "\n"
@@ -113,7 +122,7 @@ def process_file(path,file,source,inspecting_mode,destructive,use_tempfile)
         if LocaleAssistant::IgnoreList.include?(localized_key)
           #puts fn_beg+lang+fn_end + ' ignoring:' + localized_key
         else
-          arrays[lang] << [localized_key,'??? '+val.to_s]
+          arrays[lang] << [localized_key,val]
           puts file.gsub('#lang#',lang) + ' MISSING: ' + localized_key
         end
       end
@@ -145,7 +154,7 @@ def parse_command_line
   options = {}
 
   optparse = OptionParser.new do |opts|
-    opts.banner = "Usage: #{__FILE__} [options] source_language"
+    opts.banner = "Usage: locale_assistant.rb [options] source_language"
 
     options[:destructive] = false
     opts.on( '-D', '--destructive', 'If you want to clear keys that are not in the source language' ) do
@@ -180,5 +189,5 @@ if LocaleAssistant::Languages.include?(ARGV[0])
     process_file(Dir.pwd+'/',file,ARGV[0],options[:inspecting_mode],options[:destructive],options[:tempfile])
   end
 else
-  puts "Usage: #{__FILE__} [options] source_language"
+  puts "Usage: locale_assistant.rb [options] source_language"
 end
