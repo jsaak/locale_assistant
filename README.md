@@ -52,5 +52,9 @@ $ locale_assistant.rb [options] source_language
 
 Notes
 --------------
+<pre>
 This script understands only a limited subset of yaml.
 I had trouble instructing the yaml parser to cooperate, so i wrote a simple one, just enough to make this workflow fly
+Full line comments, empty lines, and comments on non leaf elements are dropped
+Comments on leaves are untouched
+</pre>
