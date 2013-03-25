@@ -38,7 +38,8 @@ def load_file(fn)
 
          key,val = line.strip.split(/:/,2)
          if val.nil?
-            puts "WARNING ignoring #{fn}:#{linecount}"
+            puts "WARNING ignoring #{fn}:#{linecount} line can not be parsed:"
+            puts line
             next
          end 
 
