@@ -30,15 +30,22 @@ def load_file(fn)
 
    begin
       f = File.open(fn)
+      linecount = 0
       f.each_line do |line|
+         linecount += 1
          next if line.strip.size == 0       # remove empty lines
          next if line.lstrip =~ /^#/        # remove full line comments
 
-         curr_spaces = (line.size - line.lstrip.size)
          key,val = line.strip.split(/:/,2)
-         val = val.strip
+         if val.nil?
+            puts "WARNING ignoring #{fn}:#{linecount}"
+            next
+         end 
 
+         val = val.strip
          val = '' if val =~ /^#/            # remove comments from non leaf elements
+
+         curr_spaces = (line.size - line.lstrip.size)
 
          if curr_spaces > spaces
             indentstore.push(curr_spaces-spaces)
