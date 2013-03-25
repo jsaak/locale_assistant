@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
    s.name        = 'locale_assistant'
-   s.version     = '0.9.1'
-   s.date        = '2013-03-21'
+   s.version     = '0.9.2'
+   s.date        = '2013-03-25'
    s.summary     = "Helps you manage those big locale yaml files"
    s.description = %Q|locale_assistant is lightweight commandline tool
 which helps you manage those big yaml files when using rails and multiple languages
