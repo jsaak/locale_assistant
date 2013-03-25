@@ -17,7 +17,7 @@ module LocaleAssistant
    IgnoreList = []
 end
 |
-   exit
+   exit -1
 end
 
 def load_file(fn)
@@ -37,13 +37,21 @@ def load_file(fn)
          next if line.lstrip =~ /^#/        # remove full line comments
 
          key,val = line.strip.split(/:/,2)
+
          if val.nil?
-            puts "WARNING ignoring #{fn}:#{linecount} line can not be parsed:"
-            puts line
-            next
-         end 
+            puts "ERROR line can not be parsed at #{fn}:#{linecount}"
+            f.close
+            exit -2
+         end
 
          val = val.strip
+
+         if val.strip[0..0] == '|'
+            puts "ERROR multiline is not supported at #{fn}:#{linecount}"
+            f.close
+            exit -3
+         end 
+
          val = '' if val =~ /^#/            # remove comments from non leaf elements
 
          curr_spaces = (line.size - line.lstrip.size)
