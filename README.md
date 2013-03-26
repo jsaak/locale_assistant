@@ -43,7 +43,7 @@ end
 Usage
 --------------
 <pre>
-$ locale_assistant.rb [options] source_language
+$ locale_assistant [options] source_language
     -D, --destructive                If you want to clear keys that are not in the source language
     -t, --tempfile                   Use .temp files for inspecting before overwriting
     -i, --inspecting-mode            Do not make changes, just list the missing keys
@@ -58,6 +58,6 @@ This script understands only a limited subset of yaml.
 I had trouble instructing the yaml parser to cooperate, so i wrote a simple one,
 just enough to make this workflow fly
 
-Full line comments, empty lines, staring 3 hyphens, and comments on non leaf elements are dropped
-Comments on leaves are untouched
+Full line comments, empty lines, starting 3 hyphens, and comments on non leaf elements are dropped
+Comments on leaves are copied
 </pre>
