@@ -35,6 +35,7 @@ def load_file(fn)
          linecount += 1
          next if line.strip.size == 0       # remove empty lines
          next if line.lstrip =~ /^#/        # remove full line comments
+         next if line =~ /^---/             # remove hyphens
 
          key,val = line.strip.split(/:/,2)
 
@@ -87,10 +88,12 @@ def load_file(fn)
    return [arr,hash]
 end
 
-def write_out(fn,array,hash,country_code)
+def write_out(fn,array,hash,country_code,add_hyphens)
   f = File.new(fn,'w+')
   prev_x = []
   indent = 0
+
+  f << "--- \n" if add_hyphens
 
   array.each do |key,val|
     next if LocaleAssistant::IgnoreList.include?(key)
@@ -123,7 +126,7 @@ def write_out(fn,array,hash,country_code)
   end
 end
 
-def process_file(path,file,source,inspecting_mode,destructive,use_tempfile)
+def process_file(path,file,source,inspecting_mode,destructive,use_tempfile,add_hyphens)
   arrays = {}
   hashes = {}
   LocaleAssistant::Languages.each do |lang|
@@ -161,7 +164,7 @@ def process_file(path,file,source,inspecting_mode,destructive,use_tempfile)
       file_suffix = ''
       file_suffix = '.temp' if use_tempfile
 
-      write_out(path + file.gsub('#lang#',lang)+file_suffix,arrays[language_to_use],hashes[lang],lang)
+      write_out(path + file.gsub('#lang#',lang)+file_suffix,arrays[language_to_use],hashes[lang],lang,add_hyphens)
     end
   end
 end
@@ -170,7 +173,7 @@ def parse_command_line
   options = {}
 
   optparse = OptionParser.new do |opts|
-    opts.banner = "Usage: locale_assistant.rb [options] source_language"
+    opts.banner = "Usage: locale_assistant [options] source_language"
 
     options[:destructive] = false
     opts.on( '-D', '--destructive', 'If you want to clear keys that are not in the source language' ) do
@@ -185,6 +188,11 @@ def parse_command_line
     options[:inspecting_mode] = false
     opts.on( '-i', '--inspecting-mode', 'Do not make changes, just list the missing keys' ) do
       options[:inspecting_mode] = true
+    end
+
+    options[:add_hyphens] = false
+    opts.on( '-a', '--add_hyphens', 'Add "--- \n" to the beginning of every yaml file' ) do
+      options[:add_hyphens] = true
     end
 
     opts.on( '-h', '--help', 'Display this screen' ) do
@@ -202,8 +210,8 @@ options = parse_command_line
 if LocaleAssistant::Languages.include?(ARGV[0])
   puts "using " + ARGV[0] + " as source language"
   LocaleAssistant::Files.each do |file|
-    process_file(Dir.pwd+'/',file,ARGV[0],options[:inspecting_mode],options[:destructive],options[:tempfile])
+    process_file(Dir.pwd+'/',file,ARGV[0],options[:inspecting_mode],options[:destructive],options[:tempfile],options[:add_hyphens])
   end
 else
-  puts "Usage: locale_assistant.rb [options] source_language"
+  puts "Usage: locale_assistant [options] source_language"
 end

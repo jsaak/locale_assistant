@@ -47,6 +47,7 @@ $ locale_assistant.rb [options] source_language
     -D, --destructive                If you want to clear keys that are not in the source language
     -t, --tempfile                   Use .temp files for inspecting before overwriting
     -i, --inspecting-mode            Do not make changes, just list the missing keys
+    -a, --add_hyphens                Add "--- \n" to the beginning of every yaml file
     -h, --help                       Display this screen
 </pre>
 
@@ -54,7 +55,9 @@ Notes
 --------------
 <pre>
 This script understands only a limited subset of yaml.
-I had trouble instructing the yaml parser to cooperate, so i wrote a simple one, just enough to make this workflow fly
-Full line comments, empty lines, and comments on non leaf elements are dropped
+I had trouble instructing the yaml parser to cooperate, so i wrote a simple one,
+just enough to make this workflow fly
+
+Full line comments, empty lines, staring 3 hyphens, and comments on non leaf elements are dropped
 Comments on leaves are untouched
 </pre>
