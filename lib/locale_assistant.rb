@@ -2,7 +2,7 @@
 
 require 'optparse'
 
-class LocalAssistantException < Exception
+class LocaleAssistantException < Exception
    attr_reader :exit_code, :message
 
    def initialize(exit_code,message)
@@ -16,7 +16,7 @@ class LocaleAssistant
       begin
          require Dir.pwd+'/config/l_assistant.conf.rb'
       rescue LoadError
-         raise LocalAssistantException.new(-1,%Q|Needs a config file located at CURRENT_DIR/config/l_assistant.conf.rb
+         raise LocaleAssistantException.new(-1,%Q|Needs a config file located at CURRENT_DIR/config/l_assistant.conf.rb
 something like this:
 
 module LocaleAssistantConf
@@ -38,7 +38,7 @@ end
             process_file(Dir.pwd+'/',file,ARGV[0],options[:inspecting_mode],options[:destructive],options[:tempfile],options[:add_hyphens])
          end
       else
-         raise LocalAssistantException.new(-2,"Usage: locale_assistant [options] source_language")
+         raise LocaleAssistantException.new(-2,"Usage: locale_assistant [options] source_language")
       end
    end
 
@@ -69,8 +69,7 @@ end
          end
 
          opts.on( '-h', '--help', 'Display this screen' ) do
-            puts opts
-            raise LocalAssistantException.new(-3,opts)
+            raise LocaleAssistantException.new(-3,opts)
          end
       end
 
@@ -99,14 +98,14 @@ end
 
             if val.nil?
                f.close
-               raise LocalAssistantException.new(-4,"ERROR line can not be parsed at #{fn}:#{linecount}")
+               raise LocaleAssistantException.new(-4,"ERROR line can not be parsed at #{fn}:#{linecount}")
             end
 
             val = val.strip
 
             if (val.strip[0..0] == '|') or (val.strip[0..0] == '>')
                f.close
-               raise LocalAssistantException.new(-5,"ERROR multiline is not supported at #{fn}:#{linecount}")
+               raise LocaleAssistantException.new(-5,"ERROR multiline is not supported at #{fn}:#{linecount}")
             end 
 
             val = '' if val =~ /^#/            # remove comments from non leaf elements

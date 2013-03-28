@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+$: << './lib'
+
 require 'test/unit'
 require 'fileutils'
 
@@ -40,7 +42,7 @@ class TestParser < Test::Unit::TestCase
       assert_equal([['a','v']], @la.load_file(tempfile("--- \na: v"))[0])
       assert_equal([['a','v']], @la.load_file(tempfile("\n\n\na: v\n\n"))[0])
       assert_equal([['a','v']], @la.load_file(tempfile("\n#comment\n     #comment\na: v\n\n"))[0])
-      assert_raise(LocalAssistantException) do
+      assert_raise(LocaleAssistantException) do
          @la.load_file(tempfile("sallalal"))
       end
       assert_equal([['a.b','v']], @la.load_file(tempfile("a:\n b: v\n"))[0])

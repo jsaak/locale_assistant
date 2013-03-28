@@ -4,7 +4,7 @@ require 'locale_assistant.rb'
 
 begin
    LocaleAssistant.new.run
-rescue LocalAssinstantException => e
+rescue LocaleAssistantException => e
    puts e.message
    exit e.exit_code
 end
