@@ -90,11 +90,11 @@ end
          linecount = 0
          f.each_line do |line|
             linecount += 1
-            next if line.strip.size == 0       # remove empty lines
-            next if line.lstrip =~ /^#/        # remove full line comments
-               next if line =~ /^---/             # remove hyphens
+            next if line.strip.size == 0             # remove empty lines
+            next if line.lstrip.start_with? '#'      # remove full line comments
+            next if line.start_with? '---'           # remove hyphens
 
-               key,val = line.strip.split(/:/,2)
+            key,val = line.strip.split(/:/,2)
 
             if val.nil?
                f.close
@@ -108,9 +108,9 @@ end
                raise LocaleAssistantException.new(-5,"ERROR multiline is not supported at #{fn}:#{linecount}")
             end 
 
-            val = '' if val =~ /^#/            # remove comments from non leaf elements
+            val = '' if val.start_with? '#'           # remove comments from non leaf elements
 
-               curr_spaces = (line.size - line.lstrip.size)
+            curr_spaces = (line.size - line.lstrip.size)
 
             if curr_spaces > spaces
                indentstore.push(curr_spaces-spaces)

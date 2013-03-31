@@ -3,7 +3,6 @@
 Root = File.expand_path('../', __FILE__)
 $LOAD_PATH.push Root+'/lib'
 
-
 begin
    require 'simplecov'
    SimpleCov.start do
@@ -88,11 +87,11 @@ end
       conffile.close
 
       enfile = File.open("#{Root}/testdir/config/en.yml",'w+')
-      enfile << "en:\n  a: english\n"
+      enfile << "en:\n  numbers:\n    one: one\n  thing: 'thing'\n"
       enfile.close
 
       esfile = File.open("#{Root}/testdir/config/es.yml",'w+')
-      esfile << "es:\n  a: espanol\n"
+      esfile << "es:\n  numbers:\n    one: uno\n  thing: 'cosa'\n"
       esfile.close
 
       Dir.chdir("#{Root}/testdir") do
@@ -101,8 +100,8 @@ end
       end
 
       hustr = IO.readlines("#{Root}/testdir/config/hu.yml").join
-      assert_equal("hu:\n  a: TODO english\n",hustr)
+      assert_equal("hu:\n  numbers:\n    one: TODO one\n  thing: 'TODO thing'\n",hustr)
       esstr = IO.readlines("#{Root}/testdir/config/es.yml").join
-      assert_equal("es:\n  a: espanol\n",esstr)
+      assert_equal("es:\n  numbers:\n    one: uno\n  thing: 'cosa'\n",esstr)
    end
 end
