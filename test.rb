@@ -1,35 +1,37 @@
 #!/usr/bin/env ruby
 
-$: << './lib'
+Root = File.expand_path('../', __FILE__)
+$LOAD_PATH.push Root+'/lib'
+
+
+begin
+   require 'simplecov'
+   SimpleCov.start do
+      root Root
+   end
+rescue LoadError
+   puts 'you can have coverage stats if you install "simplecov"'
+end
 
 require 'test/unit'
 require 'fileutils'
-
-# begin
-   # require 'simplecov'
-   # SimpleCov.start do
-      # root '../test'
-   # end
-# rescue LoadError
-# end
-
 require 'locale_assistant'
 
 class TestParser < Test::Unit::TestCase
    def setup
       @la = LocaleAssistant.new
-      `mkdir testdir`
+      `mkdir #{Root}/testdir`
    end
 
    def tempfile(str)
-      @temp = File.new('testdir/test.temp','w+')
+      @temp = File.new(Root+'/testdir/test.temp','w+')
       @temp.write str
       @temp.close
-      return 'testdir/test.temp'
+      return Root+'/testdir/test.temp'
    end
 
    def teardown
-      `rm -r testdir`
+      `rm -r #{Root}/testdir`
    end
 
    def test_parser
@@ -73,9 +75,9 @@ a2: v4
    end
 
    def test_all
-      `mkdir -p testdir/config`
+      `mkdir -p #{Root}/testdir/config`
 
-      conffile = File.open('testdir/config/l_assistant.conf.rb','w+')
+      conffile = File.open("#{Root}/testdir/config/l_assistant.conf.rb",'w+')
       conffile << %Q|
 module ::LocaleAssistantConf
    Files = ['config/#lang#.yml']
@@ -85,22 +87,22 @@ end
 |
       conffile.close
 
-      enfile = File.open('testdir/config/en.yml','w+')
+      enfile = File.open("#{Root}/testdir/config/en.yml",'w+')
       enfile << "en:\n  a: english\n"
       enfile.close
 
-      esfile = File.open('testdir/config/es.yml','w+')
+      esfile = File.open("#{Root}/testdir/config/es.yml",'w+')
       esfile << "es:\n  a: espanol\n"
       esfile.close
 
-      Dir.chdir('testdir') do
+      Dir.chdir("#{Root}/testdir") do
          ARGV[0] = 'en'
          @la.run
       end
 
-      hustr = IO.readlines('testdir/config/hu.yml').join
+      hustr = IO.readlines("#{Root}/testdir/config/hu.yml").join
       assert_equal("hu:\n  a: TODO english\n",hustr)
-      esstr = IO.readlines('testdir/config/es.yml').join
+      esstr = IO.readlines("#{Root}/testdir/config/es.yml").join
       assert_equal("es:\n  a: espanol\n",esstr)
    end
 end
