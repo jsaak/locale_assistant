@@ -59,4 +59,5 @@ just enough to make this workflow fly
 
 Full line comments, empty lines, starting 3 hyphens, and comments on non leaf elements are dropped
 Comments on leaves are copied
+Multiline values, along with many features of yaml are unsupported at the moment.
 </pre>
