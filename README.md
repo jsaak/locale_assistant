@@ -14,7 +14,7 @@ Workflow
   - edit only your chosen language .yml file
   - run "locale_assistant en" from your rails root direcotry (no need for bundle exec)
     this will sort your en.yml alphabetically (if 'en' is your primary language)
-    update or generate other language files (defined in LocaleAssistantConf::Languages)
+    update or generate other language files (defined in LocaleAssistant::Languages)
     Of course it can not translate, but will insert "TODO (text in other language)" keys in other files
   - commit
 </pre>
@@ -30,7 +30,7 @@ Setup
 --------------
 edit <code>RAILSROOT/config/l_assistant.conf.rb</code>
 <pre>
-module LocaleAssistantConf
+module LocaleAssistant
    Files = ['config/locales/#lang#.yml',
             'config/locales/#lang#_models.yml',
             'vendor/engines/contract_management/config/locales/#lang#.yml' ]
@@ -38,6 +38,7 @@ module LocaleAssistantConf
    IgnoreList = []
 end
 </pre>
+
 
 Usage
 --------------
